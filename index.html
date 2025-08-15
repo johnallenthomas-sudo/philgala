@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Info → Boarding Pass QR</title>
+  <title>Check-In for Silver Medallion Gala</title>
   <meta name="description" content="Enter your details to generate a boarding pass style PNG with an embedded QR code. All processing happens locally in your browser." />
 
   <!-- Tailwind for quick styling -->
@@ -21,9 +21,9 @@
   <header class="bg-white border-b sticky top-0 z-10">
     <div class="max-w-5xl mx-auto px-4 py-6">
       <!-- EDIT TITLE BELOW -->
-      <h1 class="text-2xl sm:text-3xl font-semibold">My Info → Boarding Pass QR</h1>
+      <h1 class="text-2xl sm:text-3xl font-semibold">Check-In Now for Silver Medallion Gala</h1>
       <!-- EDIT BODY PARAGRAPH BELOW -->
-      <p class="mt-2 text-sm text-slate-600">Fill this out to create a shareable boarding‑pass style card with your info embedded in a QR code. You can preview it live and download a PNG.</p>
+      <p class="mt-2 text-sm text-slate-600">We are so excited to have you onboard soon! Fill out the necessary info below and save a copy of your boarding pass. You'll need to show it at check-in..</p>
     </div>
   </header>
 
@@ -81,7 +81,7 @@
             <label class="block">
               <span class="text-sm">Logo path (relative URL)</span>
               <!-- EDIT: Replace with your logo file path if different -->
-              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="philgala/jane-st-air-logo.png" />
+              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="./jane-st-air-logo.png" />
             </label>
             <label class="block">
               <span class="text-sm">Page background color</span>
@@ -133,7 +133,7 @@
         prefAirline: document.getElementById('prefAirline').value.trim() || '',
         status: document.getElementById('status').value.trim() || '',
         precheck: fd.get('precheck') || 'Yes',
-        logoSrc: document.getElementById('logoSrc').value.trim() || 'philgala/jane-st-air-logo.png',
+        logoSrc: document.getElementById('logoSrc').value.trim() || './jane-st-air-logo.png',
         bgColor: document.getElementById('bgColor').value.trim() || '#f5f2ec',
         logoScale: Math.max(50, Math.min(300, parseInt(document.getElementById('logoScale').value || '120', 50)))
       };
