@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Info → QR</title>
+  <meta name="description" content="Generate a QR code from your info. All QR generation is in your browser." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col">
+  <header class="bg-white border-b sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 py-6">
+      <!-- EDIT TITLE BELOW -->
+      <h1 class="text-2xl sm:text-3xl font-semibold">My Info → QR</h1>
+      <!-- EDIT BODY PARAGRAPH BELOW -->
+      <p class="mt-2 text-sm text-slate-600">Use this tool to generate a QR code containing your contact and travel information. You can then save it as a PNG to share or store for easy access.</p>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <!-- Donation note moved to top -->
+    <section class="bg-slate-100 p-4 rounded-xl text-center">
+      <p class="text-sm text-slate-700">In lieu of gifts we ask you to consider donating to WaterAid to help Phil hit his fundraising goal ahead of the Berlin Marathon.</p>
+      <a href="https://www.justgiving.com/page/phil-reville-1" target="_blank" class="inline-block mt-3 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-500">Donate Now</a>
+    </section>
+
+    <section class="bg-white shadow rounded-2xl p-5">
+      <h3 class="text-lg font-semibold mb-3">Enter your info</h3>
+      <form id="infoForm" class="space-y-4" onsubmit="event.preventDefault(); updateQR();">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm">Full name</span>
+            <input id="fullName" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" placeholder="Jane Doe" />
+          </label>
+          <label class="block">
+            <span class="text-sm">Email</span>
+            <input id="email" type="email" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" placeholder="jane@acme.com" />
+          </label>
+          <label class="block">
+            <span class="text-sm">Phone</span>
+            <input id="phone" type="tel" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" placeholder="+1 555 123 4567" />
+          </label>
+          <label class="block">
+            <span class="text-sm">Preferred Airline</span>
+            <input id="prefAirline" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" placeholder="Delta, United, etc." />
+          </label>
+          <label class="block">
+            <span class="text-sm">Current Airline Status</span>
+            <input id="status" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" placeholder="Silver, Gold, 1K, Diamond…" />
+          </label>
+          <div class="block">
+            <span class="text-sm">Do you have PreCheck?</span>
+            <div class="mt-1 flex gap-4 items-center">
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="precheck" value="Yes" class="accent-slate-700" checked>
+                <span>Yes</span>
+              </label>
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="precheck" value="No" class="accent-slate-700">
+                <span>No</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <label class="block">
+          <span class="text-sm">Notes (optional)</span>
+          <textarea id="notes" rows="3" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500"></textarea>
+        </label>
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="submit" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Generate / Update QR</button>
+          <button type="button" id="downloadPngBtn" class="px-4 py-2 rounded-xl border">Download PNG</button>
+        </div>
+        <!-- QR preview now under buttons for better mobile layout -->
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold mb-2">QR preview</h3>
+          <div id="qr" class="self-center border rounded-2xl p-4"></div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('infoForm');
+    const downloadPngBtn = document.getElementById('downloadPngBtn');
+    let qr;
+
+    function getFormValues(){
+      return {
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        prefAirline: document.getElementById('prefAirline').value.trim(),
+        status: document.getElementById('status').value.trim(),
+        precheck: (new FormData(form)).get('precheck') || 'Yes',
+        notes: document.getElementById('notes').value.trim()
+      };
+    }
+
+    function buildVCard(v){
+      const lines = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        `FN:${v.fullName}`,
+        v.phone ? `TEL;TYPE=CELL:${v.phone}` : '',
+        v.email ? `EMAIL;TYPE=INTERNET:${v.email}` : '',
+        v.prefAirline ? `X-PREFERRED-AIRLINE:${v.prefAirline}` : '',
+        v.status ? `X-AIRLINE-STATUS:${v.status}` : '',
+        v.precheck ? `X-PRECHECK:${v.precheck}` : '',
+        v.notes ? `NOTE:${v.notes.replace(/\n/g,'\\n')}` : '',
+        'END:VCARD'
+      ].filter(Boolean);
+      return lines.join('\n');
+    }
+
+    function ensureQR(){
+      if(qr){
+        document.getElementById('qr').innerHTML = '';
+      }
+      qr = new QRCode(document.getElementById('qr'), {
+        text: ' ',
+        width: 280,
+        height: 280,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function updateQR(){
+      ensureQR();
+      const payload = buildVCard(getFormValues());
+      qr.makeCode(payload || ' ');
+    }
+
+    function downloadPNG(){
+      if(!document.querySelector('#qr canvas')){
+        updateQR();
+      }
+      const canvas = document.querySelector('#qr canvas');
+      const link = document.createElement('a');
+      link.download = 'my-info-qr.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    downloadPngBtn.addEventListener('click', downloadPNG);
+    let t;
+    form.addEventListener('input', ()=>{
+      clearTimeout(t);
+      t = setTimeout(updateQR, 200);
+    });
+    updateQR();
+  </script>
+</body>
+</html>
