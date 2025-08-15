@@ -81,7 +81,7 @@
             <label class="block">
               <span class="text-sm">Logo path (relative URL)</span>
               <!-- EDIT: Replace with your logo file path if different -->
-              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="./newlogo.png" />
+              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="https://johnallenthomas-sudo.github.io/philgala/newlogo.png" />
             </label>
             <label class="block">
               <span class="text-sm">Page background color</span>
@@ -133,7 +133,7 @@
         prefAirline: document.getElementById('prefAirline').value.trim() || '',
         status: document.getElementById('status').value.trim() || '',
         precheck: fd.get('precheck') || 'Yes',
-        logoSrc: document.getElementById('logoSrc').value.trim() || './newlogo.png',
+        logoSrc: document.getElementById('logoSrc').value.trim() || '',
         bgColor: document.getElementById('bgColor').value.trim() || '#f5f2ec',
         logoScale: Math.max(50, Math.min(300, parseInt(document.getElementById('logoScale').value || '120', 50)))
       };
