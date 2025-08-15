@@ -81,7 +81,7 @@
             <label class="block">
               <span class="text-sm">Logo path (relative URL)</span>
               <!-- EDIT: Replace with your logo file path if different -->
-              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="./jane-st-air-logo.png" />
+              <input id="logoSrc" type="text" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="./newlogo.png" />
             </label>
             <label class="block">
               <span class="text-sm">Page background color</span>
@@ -94,7 +94,7 @@
               <input id="logoScale" type="number" min="50" max="300" step="5" class="mt-1 w-full rounded-xl border-slate-300 focus:border-slate-500" value="120" />
             </label>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Put your logo image in the same folder and name it <code>jane-st-air-logo.png</code>, or change the path above. If the logo appears small, bump the <em>Logo scale (%)</em>.</p>
+          <p class="text-xs text-slate-500 mt-2">Put your logo image in the same folder and name it <code>newlogo.png</code>, or change the path above. If the logo appears small, bump the <em>Logo scale (%)</em>.</p>
         </details>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -133,7 +133,7 @@
         prefAirline: document.getElementById('prefAirline').value.trim() || '',
         status: document.getElementById('status').value.trim() || '',
         precheck: fd.get('precheck') || 'Yes',
-        logoSrc: document.getElementById('logoSrc').value.trim() || './jane-st-air-logo.png',
+        logoSrc: document.getElementById('logoSrc').value.trim() || './newlogo.png',
         bgColor: document.getElementById('bgColor').value.trim() || '#f5f2ec',
         logoScale: Math.max(50, Math.min(300, parseInt(document.getElementById('logoScale').value || '120', 50)))
       };
